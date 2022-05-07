@@ -1,3 +1,28 @@
 {
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "cmake.configureOnStart": false,
+    "cmake.reconfigureOnChange": false,
+    "cmake.default.buildDirectory": "${workspaceFolder}/out/build/${env:OS}/${buildType}/",
+    "cmake.buildDirectory": "${workspaceFolder}/out/build/${env:OS}/${buildType}/",
+    "cmake.cpptools.intelliSenseMode": "clang-x64",
+    "cmake.cpptools.languageConfiguration.CXX": {
+        "intelliSenseMode": "clang-x64",
+    },
+    "cmake.debugConfig": {
+        "stopAtEntry": false,
+        "MIMode": "gdb",
+        "miDebuggerPath": "/usr/bin/gdb",
+        "logging": {
+            "trace": true,
+            "engineLogging": true,
+            "traceResponse": true
+        },
+        "setupCommands": [
+            {
+                "description": "The new process is debugged after a fork. The parent process runs unimpeded.",
+                "text": "-gdb-set follow-fork-mode child",
+                "ignoreFailures": true
+            }
+        ],
+    },
 }
