@@ -33,8 +33,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     ui->gvChart->setRenderHint(QPainter::Antialiasing);
 
     QStandardItemModel* model = new QStandardItemModel();
-    QStringList horizontalHeader {"Thumb", "Index", "Middle", "Ring", "Little"};
-    model->setHorizontalHeaderLabels(horizontalHeader);
+    model->setHorizontalHeaderLabels(categories);
 
     ui->tvData->setModel(model);
     ui->tvData->verticalHeader()->setVisible(false);

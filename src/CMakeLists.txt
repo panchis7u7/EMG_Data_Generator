@@ -23,6 +23,7 @@ set(PROJECT_SOURCES
     MainWindow.cpp
     include/MainWindow.hpp
     ui/MainWindow/MainWindow.ui
+    include/EmgDataModel.hpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
