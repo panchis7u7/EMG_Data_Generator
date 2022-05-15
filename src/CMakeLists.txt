@@ -15,14 +15,17 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
 endif()
 
 message("Looking for QT...")
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Charts REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Charts REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Charts SerialPort REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Charts SerialPort REQUIRED)
 
 set(PROJECT_SOURCES
     main.cpp
     MainWindow.cpp
     include/MainWindow.hpp
     ui/MainWindow/MainWindow.ui
+    include/Frame.hpp
+    Frame.cpp
+    include/SerialWorker.hpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -45,4 +48,5 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 target_link_libraries( ${PROJECT_NAME} PRIVATE 
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Charts
+    Qt${QT_VERSION_MAJOR}::SerialPort
 )
