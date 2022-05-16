@@ -1,9 +1,19 @@
 #include "ui/MainWindow/ui_MainWindow.h"
 #include <include/MainWindow.hpp>
 #include <QtCharts>
+#include <QSerialPortInfo>
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
+    setupGuiComponents();
+}
+
+MainWindow::~MainWindow() { delete ui; }
+
+void MainWindow::setupGuiComponents() {
+    Q_FOREACH(QSerialPortInfo port, QSerialPortInfo::availablePorts()) {
+        ui->cbSerialPorts->addItem(port.portName());
+    }
 
     QBarSet* val = new QBarSet("Digital Value.");
     *val << 20 << 255 << 768 << 100 << 998;
@@ -53,6 +63,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     model->appendRow(list);
 }
 
-MainWindow::~MainWindow() {
-    delete ui;
+void MainWindow::on_pbSerialCD_clicked()
+{
+
 }
+

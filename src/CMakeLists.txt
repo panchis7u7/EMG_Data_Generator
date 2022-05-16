@@ -23,9 +23,11 @@ set(PROJECT_SOURCES
     MainWindow.cpp
     include/MainWindow.hpp
     ui/MainWindow/MainWindow.ui
-    include/Frame.hpp
-    Frame.cpp
-    include/SerialWorker.hpp
+    include/SerialPortWorker.hpp
+    SerialPortWorker.cpp
+    #include/Frame.hpp
+    #Frame.cpp
+    #include/SerialWorker.hpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

@@ -14,6 +14,10 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void setupGuiComponents();
+
+private slots:
+    void on_pbSerialCD_clicked();
 
 private:
     Ui::MainWindow *ui;
