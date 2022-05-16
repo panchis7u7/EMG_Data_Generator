@@ -14,6 +14,7 @@ public:
     SerialPortWorker(QQueue<char*>& SerialBufferQueue, QObject* parent = nullptr);
     ~SerialPortWorker();
     int connect(QString comPort);
+    int disconnect();
     void requestWork();
     void abortWork();
 

@@ -25,6 +25,17 @@ int SerialPortWorker::connect(QString comPort) {
     m_qspSerialPort->setFlowControl(QSerialPort::FlowControl::NoFlowControl);
     m_qspSerialPort->open(QIODevice::OpenModeFlag::ReadWrite);
     qDebug() << "SerialPort Status: " << m_qspSerialPort->isOpen();
+    if(!m_qspSerialPort->isOpen())
+        return -1;
+    return 0;
+}
+
+int SerialPortWorker::disconnect() {
+    if (m_qspSerialPort->isOpen()) {
+        m_qspSerialPort->close();
+        return 0;
+    }
+    return -1;
 }
 
 void SerialPortWorker::requestWork() {

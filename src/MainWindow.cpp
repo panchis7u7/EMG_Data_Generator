@@ -2,13 +2,22 @@
 #include <include/MainWindow.hpp>
 #include <QtCharts>
 #include <QSerialPortInfo>
+#include <QMessageBox>
+#include <QThread>
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow) {
+    QThread* threadSerial = new QThread();
+    m_spwWorker = new SerialPortWorker(m_qqSerialBufferQueue);
+    m_spwWorker->moveToThread(threadSerial);
     ui->setupUi(this);
     setupGuiComponents();
 }
 
-MainWindow::~MainWindow() { delete ui; }
+MainWindow::~MainWindow() {
+    delete ui;
+    m_spwWorker->disconnect();
+    delete m_spwWorker;
+}
 
 void MainWindow::setupGuiComponents() {
     Q_FOREACH(QSerialPortInfo port, QSerialPortInfo::availablePorts()) {
@@ -63,8 +72,26 @@ void MainWindow::setupGuiComponents() {
     model->appendRow(list);
 }
 
-void MainWindow::on_pbSerialCD_clicked()
-{
-
+void MainWindow::on_pbSerialCD_clicked() {
+    if(ui->pbSerialCD->text().contains("Connect")) {
+        if(m_spwWorker->connect(ui->cbSerialPorts->currentText()) < 0) {
+            QMessageBox mbox;
+            mbox.setText("Error opening serial port!");
+            ui->lblStatus->setText("Disconnected");
+            ui->lblStatus->setStyleSheet("QLabel { color: red; }");
+            mbox.exec();
+        } else {
+            ui->lblStatus->setText("Connected");
+            ui->lblStatus->setStyleSheet("QLabel { color: green; }");
+            ui->pbSerialCD->setText("Disconnect");
+        }
+    } else {
+        m_spwWorker->abortWork();
+        if(m_spwWorker->disconnect() >= 0) {
+            ui->lblStatus->setText("Disconnected");
+            ui->lblStatus->setStyleSheet("QLabel { color: red; }");
+            ui->pbSerialCD->setText("Connect");
+        }
+    }
 }
 

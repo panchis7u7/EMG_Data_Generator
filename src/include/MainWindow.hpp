@@ -2,13 +2,14 @@
 #define MAINWINDOW_HPP
 
 #include <QMainWindow>
+#include <QQueue>
+#include <include/SerialPortWorker.hpp>
 
 namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -21,6 +22,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    SerialPortWorker* m_spwWorker;
+    QQueue<char*> m_qqSerialBufferQueue;
 };
 
 #endif // MAINWINDOW_HPP
