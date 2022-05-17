@@ -25,8 +25,8 @@ set(PROJECT_SOURCES
     ui/MainWindow/MainWindow.ui
     include/SerialPortWorker.hpp
     SerialPortWorker.cpp
-    #include/Frame.hpp
-    #Frame.cpp
+    include/Frame.hpp
+    Frame.cpp
     #include/SerialWorker.hpp
 )
 

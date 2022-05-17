@@ -1,51 +1,36 @@
 #include <include/Frame.hpp>
 
-Frame::Frame(QObject* parent): QObject(parent) {}
+Frame::Frame(quint8 cmd, QByteArray data, QObject* parent): QObject(parent) {
+    qsizetype dataBytesCount = data.count();
+    m_qbarrBuffer[FrameHeaders::SOF] = FRAME_START;
+    m_qbarrBuffer[FrameHeaders::CMDID] = cmd;
+    m_qbarrBuffer[FrameHeaders::LEN] = dataBytesCount;
 
-Frame::Frame(quint8 cmd, QByteArray data, QObject *parent): QObject(parent) {
-    m_baBuffer[INDEX_START_OF_FRAME] = FRAME_START;
-    m_baBuffer[INDEX_CMD] = cmd;
-    quint8 dataCount = quint8(data.count());
-    m_baBuffer[INDEX_DATA_LENGTH] = dataCount;
+    for(int i = 0; i < dataBytesCount; ++i)
+        m_qbarrBuffer[FrameHeaders::DATA + i] = data[i];
 
-    for(int i = 0; i < dataCount; ++i)
-        m_baBuffer[INDEX_FIRST_DATA_BYTE + i] = quint8(data[i]);
-
-    m_baBuffer += calculateChecksum();
+    m_qbarrBuffer.append(calculateChecksum());
 }
 
-Frame::~Frame() { m_baBuffer.clear(); }
+Frame::~Frame() {}
 
-quint8 Frame::getCmd() {
-    quint8 val = 0;
-    if(m_baBuffer.count() >= INDEX_CMD)
-        val = quint8(m_baBuffer[INDEX_CMD]);
-    return val;
+unsigned Frame::calculateChecksum() {
+    quint8 checksum = 0;
+
+    for(auto& byte : m_qbarrBuffer)
+        checksum += quint8(byte);
+
+    return checksum;
 }
 
-quint8 Frame::getDataLength() {
-    quint8 val = 0;
-    if(m_baBuffer.count() >= INDEX_DATA_LENGTH)
-        val = quint8(m_baBuffer[INDEX_DATA_LENGTH]);
-    return val;
-}
+QByteArray Frame::getBuffer() { return m_qbarrBuffer; }
 
-quint8 Frame::getIndexedByte(int index) {
-    quint8 val = 0;
-    if(getDataLength() >= index)
-        val = quint8(m_baBuffer[INDEX_FIRST_DATA_BYTE + index]);
-    return val;
-}
+quint8 Frame::getCMDID() { return (m_qbarrBuffer.count() > 3) ? quint8(m_qbarrBuffer[FrameHeaders::CMDID]) : 0; }
 
-quint8 Frame::calculateChecksum() {
-    quint8 val = 0;
-    for(int i = 0; i < m_baBuffer.count(); ++i)
-        val += quint8(m_baBuffer[i]);
-    return val;
-}
+quint8 Frame::getDataLen() { return (m_qbarrBuffer.count() > FrameHeaders::CMDID) ? quint8(m_qbarrBuffer[FrameHeaders::LEN]) : 0; }
 
-QByteArray Frame::getBuffer() { return m_baBuffer; }
+quint8 Frame::getByte(unsigned int index) { return (getDataLen() > 0) ? quint8(m_qbarrBuffer[FrameHeaders::DATA + index]) : 0; }
 
-void Frame::clear() { m_baBuffer.clear(); }
+void Frame::clear() { m_qbarrBuffer.clear(); }
 
-void Frame::addByte(quint8 data) { m_baBuffer.append(data); }
+void Frame::addByte(quint8 byte) { m_qbarrBuffer.append(byte); }
