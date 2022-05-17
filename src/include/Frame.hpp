@@ -11,10 +11,16 @@ typedef enum FrameHeaders {
     CHECKSUM = 4
 } FrameHeaders;
 
-class Frame: QObject {
+class Frame: public QObject {
     Q_OBJECT
 
 public:
+    static constexpr quint8 FRAME_START = 0x8A;
+    static constexpr quint8 FRAME_ESCAPE_CHAR = 0x8B;
+    static constexpr quint8 FRAME_XOR_CHAR = 0x20;
+    static constexpr quint8 FRAME_NUM_EXTRA_BYTES = 4;
+
+    explicit Frame(QObject* parent = nullptr);
     explicit Frame(quint8 cmd, QByteArray data, QObject* parent = nullptr);
     ~Frame();
     QByteArray getBuffer();
@@ -25,8 +31,6 @@ public:
     void addByte(quint8);
 
 private:
-    static constexpr unsigned short FRAME_START = 0x8A;
-
     unsigned calculateChecksum();
 
     QByteArray m_qbarrBuffer;

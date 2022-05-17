@@ -6,12 +6,21 @@
 #include <QString>
 #include <QMutex>
 #include <QtSerialPort/QSerialPort>
+#include <include/Frame.hpp>
+
+typedef enum RecieverStatus {
+    RCV_STATE_IDLE = 0,
+    RCV_STATE_CMDID,
+    RCV_STATE_DATA_LEN,
+    RCV_STATE_DATA,
+    RCV_STATE_CHECKSUM
+} RecieverStatus;
 
 class SerialPortWorker: public QObject {
    Q_OBJECT
 
 public:
-    SerialPortWorker(QQueue<char*>& SerialBufferQueue, QObject* parent = nullptr);
+    SerialPortWorker(QQueue<Frame*>& SerialBufferQueue, QObject* parent = nullptr);
     ~SerialPortWorker();
     int connect(QString comPort);
     int disconnect();
@@ -19,22 +28,23 @@ public:
     void abortWork();
 
 private:
-    static constexpr unsigned short RCV_SOF = 0;
-    static constexpr unsigned short RCV_CMDID = 1;
-    static constexpr unsigned short RCV_LEN = 2;
-    static constexpr unsigned short RCV_DATA = 3;
-    static constexpr unsigned short RCV_CHECKSUM = 4;
-
     bool m_bWorking;
     bool m_bAborted;
     QMutex m_qmxMutex;
     QSerialPort* m_qspSerialPort;
-    QQueue<char*> m_qqSerialBufferQueue;
+    QQueue<Frame*> m_qqSerialBufferQueue;
     quint8 calculateChecksum(QByteArray buffer);
-    void sendData(char* frame);
+    void sendData(Frame* frame);
 
 signals:
+    void frameRecieved(Frame* frame);
+    void frameIncoming(Frame* frame);
+    void workRequested();
+    void finished();
+
 public slots:
+    void doWork();
+    void sendFrame(Frame* frame);
 };
 
 #endif // SERIALPORTWORKER_HPP

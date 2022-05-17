@@ -3,10 +3,11 @@
 
 #include <QMainWindow>
 #include <QQueue>
+#include <include/Frame.hpp>
 #include <include/SerialPortWorker.hpp>
 
 namespace Ui {
-class MainWindow;
+    class MainWindow;
 }
 
 class MainWindow : public QMainWindow {
@@ -23,7 +24,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     SerialPortWorker* m_spwWorker;
-    QQueue<char*> m_qqSerialBufferQueue;
+    QQueue<Frame*> m_qqSerialBufferQueue;
 };
 
 #endif // MAINWINDOW_HPP

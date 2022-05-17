@@ -11,6 +11,14 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     m_spwWorker->moveToThread(threadSerial);
     ui->setupUi(this);
     setupGuiComponents();
+
+    connect(m_spwWorker, SIGNAL(workRequested()), threadSerial, SLOT(start()));
+    connect(threadSerial, SIGNAL(started()), m_spwWorker, SLOT(doWork()));
+    connect(m_spwWorker, SIGNAL(finished()), threadSerial, SLOT(quit()), Qt::ConnectionType::DirectConnection);
+
+    m_spwWorker->abortWork();
+    threadSerial->wait();
+    m_spwWorker->requestWork();
 }
 
 MainWindow::~MainWindow() {

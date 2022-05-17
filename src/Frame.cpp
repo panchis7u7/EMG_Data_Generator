@@ -1,5 +1,7 @@
 #include <include/Frame.hpp>
 
+Frame::Frame(QObject* parent): QObject(parent) {}
+
 Frame::Frame(quint8 cmd, QByteArray data, QObject* parent): QObject(parent) {
     qsizetype dataBytesCount = data.count();
     m_qbarrBuffer[FrameHeaders::SOF] = FRAME_START;
