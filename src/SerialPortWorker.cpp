@@ -65,17 +65,18 @@ void SerialPortWorker::sendData(Frame* data) {
 
 void SerialPortWorker::doWork() {
     qDebug() << "Starting worker process in thread " << thread()->currentThreadId();
-    quint8 inByte, xored, nDataBytes, checksum;
+    quint8 inByte = 0, xored = 0, nDataBytes = 0, checksum = 0;
     Frame* inFrame;
     RecieverStatus status = RecieverStatus::RCV_STATE_IDLE;
 
     while(!m_bAborted) {
+        //Check if there is alredy a frame pending in the queue.
         if(!m_qqSerialBufferQueue.isEmpty()) {
             Frame* outFrame = m_qqSerialBufferQueue.dequeue();
             sendFrame(outFrame);
             delete outFrame;
-        } else {
-            if(m_qspSerialPort->waitForReadyRead(10)) {
+            // If there are no frames queued, wait 10 msec for serial availability.
+        } else if(m_qspSerialPort->waitForReadyRead(10)) {
                 QByteArray recievedData = m_qspSerialPort->readAll();
                 while(recievedData.count() > 0) {
                     inByte = quint8(recievedData[0]);
@@ -126,7 +127,7 @@ void SerialPortWorker::doWork() {
                                 if(inByte == checksum) {
                                     status = RecieverStatus::RCV_STATE_IDLE;
                                     inFrame->addByte(checksum);
-                                    emit this->frameRecieved(inFrame);
+                                    this->frameReceieved(inFrame);
                                 } else {
                                     status = RecieverStatus::RCV_STATE_IDLE;
                                     inFrame->clear();
@@ -141,7 +142,6 @@ void SerialPortWorker::doWork() {
                 }
             }
         }
-    }
 
     if(m_qspSerialPort != nullptr) {
         m_qspSerialPort->close();
@@ -158,4 +158,8 @@ void SerialPortWorker::doWork() {
 
         emit finished();
     }
+}
+
+void SerialPortWorker::frameReceieved(Frame* frame) {
+    qDebug() << frame->getStringData();
 }

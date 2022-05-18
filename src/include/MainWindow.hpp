@@ -21,6 +21,8 @@ public:
 private slots:
     void on_pbSerialCD_clicked();
 
+    void on_pbCapture_clicked();
+
 private:
     Ui::MainWindow *ui;
     SerialPortWorker* m_spwWorker;

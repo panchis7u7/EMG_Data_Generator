@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
 MainWindow::~MainWindow() {
     delete ui;
+    m_spwWorker->abortWork();
     m_spwWorker->disconnect();
     delete m_spwWorker;
 }
@@ -101,5 +102,10 @@ void MainWindow::on_pbSerialCD_clicked() {
             ui->pbSerialCD->setText("Connect");
         }
     }
+}
+
+
+void MainWindow::on_pbCapture_clicked() {
+    m_spwWorker->doWork();
 }
 

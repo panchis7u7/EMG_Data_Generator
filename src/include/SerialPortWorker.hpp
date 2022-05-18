@@ -35,10 +35,9 @@ private:
     QQueue<Frame*> m_qqSerialBufferQueue;
     quint8 calculateChecksum(QByteArray buffer);
     void sendData(Frame* frame);
+    void frameReceieved(Frame* frame);
 
 signals:
-    void frameRecieved(Frame* frame);
-    void frameIncoming(Frame* frame);
     void workRequested();
     void finished();
 

@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <include/Frame.hpp>
 
 Frame::Frame(QObject* parent): QObject(parent) {}
@@ -32,6 +33,15 @@ quint8 Frame::getCMDID() { return (m_qbarrBuffer.count() > 3) ? quint8(m_qbarrBu
 quint8 Frame::getDataLen() { return (m_qbarrBuffer.count() > FrameHeaders::CMDID) ? quint8(m_qbarrBuffer[FrameHeaders::LEN]) : 0; }
 
 quint8 Frame::getByte(unsigned int index) { return (getDataLen() > 0) ? quint8(m_qbarrBuffer[FrameHeaders::DATA + index]) : 0; }
+
+QString Frame::getStringData() {
+    QString data = "";
+    quint8 dataLen = this->getDataLen();
+    for(int i = 0; i < dataLen; ++i)
+        data.append(m_qbarrBuffer[FrameHeaders::DATA + i]);
+    qDebug() << "Data recieved: " << data;
+    return data;
+}
 
 void Frame::clear() { m_qbarrBuffer.clear(); }
 

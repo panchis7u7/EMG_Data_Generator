@@ -27,6 +27,7 @@ public:
     quint8 getCMDID();
     quint8 getDataLen();
     quint8 getByte(unsigned index);
+    QString getStringData();
     void clear();
     void addByte(quint8);
 
