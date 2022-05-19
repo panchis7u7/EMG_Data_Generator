@@ -16,6 +16,10 @@ typedef enum RecieverStatus {
     RCV_STATE_CHECKSUM
 } RecieverStatus;
 
+typedef enum SerialErrorCodes {
+    UNDEFINED_SERIAL_PORT = 0
+} SerialErrorCodes;
+
 class SerialPortWorker: public QObject {
    Q_OBJECT
 

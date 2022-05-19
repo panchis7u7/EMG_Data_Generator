@@ -1,6 +1,7 @@
 #include <include/SerialPortWorker.hpp>
 #include <QDebug>
 #include <QThread>
+#include <QMessageBox>
 
 SerialPortWorker::SerialPortWorker(QQueue<Frame*>& serialBufferQueue, QObject* parent): QObject(parent), m_qqSerialBufferQueue(serialBufferQueue) {
     m_bWorking = false;
@@ -64,6 +65,9 @@ void SerialPortWorker::sendData(Frame* data) {
 }
 
 void SerialPortWorker::doWork() {
+    if(!m_qspSerialPort->isOpen())
+        throw SerialErrorCodes::UNDEFINED_SERIAL_PORT;
+
     qDebug() << "Starting worker process in thread " << thread()->currentThreadId();
     quint8 inByte = 0, xored = 0, nDataBytes = 0, checksum = 0;
     Frame* inFrame;

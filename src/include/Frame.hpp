@@ -11,6 +11,10 @@ typedef enum FrameHeaders {
     CHECKSUM = 4
 } FrameHeaders;
 
+typedef enum FrameCommands {
+    CAPTURE_DATA_REQUEST = 0,
+} FrameCommands;
+
 class Frame: public QObject {
     Q_OBJECT
 

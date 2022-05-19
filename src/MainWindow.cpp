@@ -106,6 +106,17 @@ void MainWindow::on_pbSerialCD_clicked() {
 
 
 void MainWindow::on_pbCapture_clicked() {
-    m_spwWorker->doWork();
+    try {
+        m_spwWorker->doWork();
+    } catch(SerialErrorCodes code) {
+        QMessageBox mbox;
+        switch(code) {
+            case SerialErrorCodes::UNDEFINED_SERIAL_PORT:
+                mbox.setText("Please connect to a serial port first!");
+            break;
+        }
+
+        mbox.exec();
+    }
 }
 
