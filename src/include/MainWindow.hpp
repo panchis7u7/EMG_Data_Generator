@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QQueue>
+#include <QFile>
 #include <include/Frame.hpp>
 #include <include/SerialPortWorker.hpp>
 
@@ -19,6 +20,9 @@ public:
     void setupGuiComponents();
 
 private slots:
+    void on_pbFile_clicked();
+
+private slots:
     void on_pbSerialCD_clicked();
 
     void on_pbCapture_clicked();
@@ -27,6 +31,7 @@ private:
     Ui::MainWindow *ui;
     SerialPortWorker* m_spwWorker;
     QQueue<Frame*> m_qqSerialBufferQueue;
+    QFile dumpFile;
 };
 
 #endif // MAINWINDOW_HPP

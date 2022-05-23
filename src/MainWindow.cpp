@@ -104,7 +104,6 @@ void MainWindow::on_pbSerialCD_clicked() {
     }
 }
 
-
 void MainWindow::on_pbCapture_clicked() {
     try {
         m_spwWorker->doWork();
@@ -120,3 +119,30 @@ void MainWindow::on_pbCapture_clicked() {
     }
 }
 
+void MainWindow::on_pbFile_clicked() {
+    if(ui->pbFile->text().contains("Open File")) {
+        QString fileName = QFileDialog::getOpenFileName(this, tr("Open or Create CSV file."), "/home", tr("Text files (*.csv)"));
+        QStringList fileArr = fileName.split("/", Qt::SplitBehaviorFlags::SkipEmptyParts);
+        dumpFile.setFileName(fileName);
+
+        if(!dumpFile.open(QIODevice::OpenModeFlag::ReadWrite)) {
+            QMessageBox mbox;
+            mbox.setText("Error opening file!");
+            ui->pbFile->setText("Open File");
+            ui->lblFileStatus->setText("No File Specified");
+            ui->lblFileStatus->setStyleSheet("QLabel { color: red; }");
+        }
+
+        ui->pbFile->setText("Close File");
+        ui->lblFileStatus->setText(fileArr.back());
+        ui->lblFileStatus->setStyleSheet("QLabel { color: green; }");
+
+    } else {
+        if(!dumpFile.isOpen())
+            dumpFile.close();
+
+        ui->pbFile->setText("Open File");
+        ui->lblFileStatus->setText("No File Specified");
+        ui->lblFileStatus->setStyleSheet("QLabel { color: red; }");
+    }
+}
